@@ -20,8 +20,8 @@ export default function Header() {
         ></Button>
       )}
       <View>
-        <Text style={styles.name}>Hello {staticInfo.name}</Text>
-        <Text style={styles.subtitle}>Welcome back to your goal</Text>
+        <Text style={styles.name}>Hola {staticInfo.name}</Text>
+        <Text style={styles.subtitle}>De regreso a tu objetivo</Text>
       </View>
       <Image source={staticInfo.uri} style={styles.profileImage} />
     </View>

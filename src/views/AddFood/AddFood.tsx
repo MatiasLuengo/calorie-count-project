@@ -10,7 +10,7 @@ export default function AddFood() {
         <Header />
         <View style={styles.addFoodContainer}>
           <Text style={{ fontSize: 20, fontWeight: "bold", marginStart: 10 }}>
-            Add Food
+            Agregar alimento
           </Text>
           <Button
             icon={<Icon name="add-circle-outline" color={"#fff"} />}
@@ -21,7 +21,7 @@ export default function AddFood() {
         </View>
         <View style={styles.searchContainer}>
           <View style={styles.inputContainer}>
-            <Input placeholder="apple, meat, soda..." />
+            <Input placeholder="manzana, carne, gaseosa..." />
           </View>
           <Button icon={<Icon name="search" color={"#fff"} />} radius={"md"} />
         </View>

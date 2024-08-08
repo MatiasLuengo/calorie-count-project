@@ -14,7 +14,7 @@ export default function Home() {
       <View style={styles.webContainer}>
         <Header />
         <View style={styles.caloriesContainer}>
-          <Text style={{ fontSize: 20, fontWeight: "bold" }}>Calories</Text>
+          <Text style={{ fontSize: 20, fontWeight: "bold" }}>Calorías</Text>
           <Button
             icon={<Icon name="add-circle-outline" color={"#fff"} />}
             radius={"md"}
