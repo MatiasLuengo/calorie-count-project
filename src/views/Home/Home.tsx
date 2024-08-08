@@ -11,15 +11,17 @@ export default function Home() {
   };
   return (
     <View style={styles.container}>
-      <Header />
-      <View style={styles.caloriesContainer}>
-        <Text style={{ fontSize: 20, fontWeight: "bold" }}>Calories</Text>
-        <Button
-          icon={<Icon name="add-circle-outline" color={"#fff"} />}
-          radius={"md"}
-          color={"#4ecb71"}
-          onPress={handleAddCaloriesPress}
-        />
+      <View style={styles.webContainer}>
+        <Header />
+        <View style={styles.caloriesContainer}>
+          <Text style={{ fontSize: 20, fontWeight: "bold" }}>Calories</Text>
+          <Button
+            icon={<Icon name="add-circle-outline" color={"#fff"} />}
+            radius={"md"}
+            color={"#4ecb71"}
+            onPress={handleAddCaloriesPress}
+          />
+        </View>
       </View>
     </View>
   );
@@ -30,6 +32,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     padding: 10,
+  },
+  webContainer: {
+    width: "100%",
+    maxWidth: 800,
+    marginHorizontal: "auto",
   },
   caloriesContainer: {
     flexDirection: "row",

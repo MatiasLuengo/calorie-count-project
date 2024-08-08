@@ -6,23 +6,25 @@ export default function AddFood() {
   const handleAddCaloriesPress = () => {};
   return (
     <View style={styles.container}>
-      <Header />
-      <View style={styles.addFoodContainer}>
-        <Text style={{ fontSize: 20, fontWeight: "bold", marginStart: 10 }}>
-          Add Food
-        </Text>
-        <Button
-          icon={<Icon name="add-circle-outline" color={"#fff"} />}
-          radius={"md"}
-          color={"#4ecb71"}
-          onPress={handleAddCaloriesPress}
-        />
-      </View>
-      <View style={styles.searchContainer}>
-        <View style={styles.inputContainer}>
-          <Input placeholder="apple, meat, soda..." />
+      <View style={styles.webContainer}>
+        <Header />
+        <View style={styles.addFoodContainer}>
+          <Text style={{ fontSize: 20, fontWeight: "bold", marginStart: 10 }}>
+            Add Food
+          </Text>
+          <Button
+            icon={<Icon name="add-circle-outline" color={"#fff"} />}
+            radius={"md"}
+            color={"#4ecb71"}
+            onPress={handleAddCaloriesPress}
+          />
         </View>
-        <Button icon={<Icon name="search" color={"#fff"} />} radius={"md"} />
+        <View style={styles.searchContainer}>
+          <View style={styles.inputContainer}>
+            <Input placeholder="apple, meat, soda..." />
+          </View>
+          <Button icon={<Icon name="search" color={"#fff"} />} radius={"md"} />
+        </View>
       </View>
     </View>
   );
@@ -33,6 +35,11 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: "#fff",
+  },
+  webContainer: {
+    width: "100%",
+    maxWidth: 800,
+    marginHorizontal: "auto",
   },
   addFoodContainer: {
     flexDirection: "row",
