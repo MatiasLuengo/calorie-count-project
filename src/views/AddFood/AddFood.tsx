@@ -1,9 +1,16 @@
 import { View, Text, StyleSheet } from "react-native";
 import Header from "../../components/Header";
 import { Button, Icon, Input } from "@rneui/themed";
+import AddFoodModal from "../../components/AddFoodModal";
+import { useState } from "react";
 
 export default function AddFood() {
-  const handleAddCaloriesPress = () => {};
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.webContainer}>
@@ -16,7 +23,7 @@ export default function AddFood() {
             icon={<Icon name="add-circle-outline" color={"#fff"} />}
             radius={"md"}
             color={"#4ecb71"}
-            onPress={handleAddCaloriesPress}
+            onPress={() => setModalOpen(true)}
           />
         </View>
         <View style={styles.searchContainer}>
@@ -26,6 +33,7 @@ export default function AddFood() {
           <Button icon={<Icon name="search" color={"#fff"} />} radius={"md"} />
         </View>
       </View>
+      <AddFoodModal visible={modalOpen} onClose={handleModalClose} />
     </View>
   );
 }

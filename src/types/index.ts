@@ -9,3 +9,8 @@ export type NavigationProps = NativeStackNavigationProp<
   RootStackParams,
   "AddFood"
 >;
+
+export type AddFoodModalProps = {
+  onClose: () => void;
+  visible: boolean;
+};
