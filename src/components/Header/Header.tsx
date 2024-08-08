@@ -1,4 +1,6 @@
+import { useNavigation } from "@react-navigation/native";
 import { View, Text, StyleSheet, Image } from "react-native";
+import { Button, Icon } from "@rneui/themed";
 const img = require("../../../assets/perfil.jpg");
 
 const staticInfo = {
@@ -6,8 +8,17 @@ const staticInfo = {
   uri: img,
 };
 export default function Header() {
+  const { canGoBack, goBack } = useNavigation();
+
   return (
     <View style={styles.container}>
+      {canGoBack() && (
+        <Button
+          icon={<Icon name="arrow-back" size={24} />}
+          type="clear"
+          onPress={() => goBack()}
+        ></Button>
+      )}
       <View>
         <Text style={styles.name}>Hello {staticInfo.name}</Text>
         <Text style={styles.subtitle}>Welcome back to your goal</Text>
@@ -36,4 +47,5 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
   },
+  arrow: {},
 });
