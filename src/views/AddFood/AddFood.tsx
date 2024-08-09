@@ -3,11 +3,22 @@ import Header from "../../components/Header";
 import { Button, Icon, Input } from "@rneui/themed";
 import AddFoodModal from "../../components/AddFoodModal";
 import { useState } from "react";
+import useFoodStorage from "../../hooks/useFoodStorage";
 
 export default function AddFood() {
   const [modalOpen, setModalOpen] = useState(false);
+  const { onGetFood } = useFoodStorage();
 
-  const handleModalClose = () => {
+  const handleModalClose = async (shouldRefresh?: boolean) => {
+    if (shouldRefresh) {
+      alert("El alimento se agrego correctamente");
+      try {
+        const foodResponse = await onGetFood();
+        console.log(foodResponse);
+      } catch (error) {
+        console.error(error);
+      }
+    }
     setModalOpen(false);
   };
 

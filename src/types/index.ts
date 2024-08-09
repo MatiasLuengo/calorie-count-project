@@ -11,6 +11,12 @@ export type NavigationProps = NativeStackNavigationProp<
 >;
 
 export type AddFoodModalProps = {
-  onClose: () => void;
+  onClose: (shouldRefresh?: boolean) => void;
   visible: boolean;
+};
+
+export type Meal = {
+  name: string;
+  calories: string;
+  portion: string;
 };

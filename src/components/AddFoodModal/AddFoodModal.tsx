@@ -1,11 +1,33 @@
 import { View, Modal, StyleSheet, Text } from "react-native";
 import { AddFoodModalProps } from "../../types/index";
 import { Button, Icon, Input } from "@rneui/themed";
+import { useEffect, useState } from "react";
+import useFoodStorage from "../../hooks/useFoodStorage";
 export default function AddFoodModal({ onClose, visible }: AddFoodModalProps) {
+  const [name, setName] = useState("");
+  const [calories, setCalories] = useState("");
+  const [portion, setPortion] = useState("");
+  const { onSaveFood } = useFoodStorage();
+
+  useEffect(() => {
+    setName("");
+    setCalories("");
+    setPortion("");
+  }, [visible]);
+
+  const handleSubmit = async () => {
+    try {
+      await onSaveFood({ name, calories, portion });
+      onClose(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Modal
       visible={visible}
-      onRequestClose={onClose}
+      onRequestClose={() => onClose()}
       animationType="fade"
       transparent
     >
@@ -14,26 +36,50 @@ export default function AddFoodModal({ onClose, visible }: AddFoodModalProps) {
           <View style={styles.closeButton}>
             <Button
               icon={<Icon name="close" size={28} />}
-              onPress={onClose}
+              onPress={() => onClose()}
               type="clear"
             />
           </View>
           <Text style={styles.title}>Agregar alimento</Text>
-          <FormItem legend="Nombre" />
-          <FormItem legend="Kcal" />
-          <FormItem legend="Porción" />
-          <Button title="Añadir" icon={<Icon name="add" color={"#fff"} />} />
+          <FormItem legend="Nombre" inputValue={name} setInput={setName} />
+          <FormItem legend="Cal" inputValue={calories} setInput={setCalories} />
+          <FormItem
+            legend="Porción"
+            inputValue={portion}
+            setInput={setPortion}
+          />
+          <Button
+            title="Añadir"
+            icon={<Icon name="add" color={"#fff"} />}
+            disabled={
+              name.trim() === "" ||
+              calories.trim() === "" ||
+              portion.trim() === ""
+            }
+            onPress={handleSubmit}
+          />
         </View>
       </View>
     </Modal>
   );
 }
 
-export function FormItem({ legend }: { legend: string }) {
+export function FormItem({
+  legend,
+  inputValue,
+  setInput,
+}: {
+  legend: string;
+  inputValue?: string;
+  setInput: any;
+}) {
   return (
     <View style={styles.formItem}>
       <View style={styles.inputContainer}>
-        <Input />
+        <Input
+          value={inputValue}
+          onChangeText={(text: string) => setInput(text)}
+        />
       </View>
       <Text style={styles.legend}>{legend}</Text>
     </View>
