@@ -2,25 +2,36 @@ import { View, Text, StyleSheet } from "react-native";
 import Header from "../../components/Header";
 import { Button, Icon, Input } from "@rneui/themed";
 import AddFoodModal from "../../components/AddFoodModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useFoodStorage from "../../hooks/useFoodStorage";
+import { Meal } from "../../types";
+import MealList from "../../components/MealList";
 
 export default function AddFood() {
   const [modalOpen, setModalOpen] = useState(false);
+  const [food, setFood] = useState<Meal[]>([]);
   const { onGetFood } = useFoodStorage();
+
+  const loadFoods = async () => {
+    try {
+      const foodResponse = await onGetFood();
+      setFood(foodResponse);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleModalClose = async (shouldRefresh?: boolean) => {
     if (shouldRefresh) {
       alert("El alimento se agrego correctamente");
-      try {
-        const foodResponse = await onGetFood();
-        console.log(foodResponse);
-      } catch (error) {
-        console.error(error);
-      }
+      loadFoods();
     }
     setModalOpen(false);
   };
+
+  useEffect(() => {
+    loadFoods();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -45,6 +56,7 @@ export default function AddFood() {
         </View>
       </View>
       <AddFoodModal visible={modalOpen} onClose={handleModalClose} />
+      <MealList mealItems={food} />
     </View>
   );
 }
