@@ -1,14 +1,36 @@
 import { View, Text, StyleSheet } from "react-native";
 import Header from "../../components/Header";
 import { Button, Icon } from "@rneui/themed";
-import { useNavigation } from "@react-navigation/native";
-import { NavigationProps } from "../../types/index";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { Meal, NavigationProps } from "../../types/index";
+import useFoodStorage from "../../hooks/useFoodStorage";
+import { useCallback, useState } from "react";
 
 export default function Home() {
+  const { onGetTodayFood } = useFoodStorage();
+  const [todayFood, setTodayFood] = useState<Meal[]>([]);
+
+  const loadTodayFood = useCallback(async () => {
+    try {
+      const todayFoodResponse = await onGetTodayFood();
+      setTodayFood(todayFoodResponse);
+    } catch (error) {
+      console.error(error);
+      setTodayFood([]);
+    }
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadTodayFood().catch(null);
+    }, [loadTodayFood])
+  );
+
   const { navigate } = useNavigation<NavigationProps>();
   const handleAddCaloriesPress = () => {
     navigate("AddFood");
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.webContainer}>
@@ -22,6 +44,7 @@ export default function Home() {
             onPress={handleAddCaloriesPress}
           />
         </View>
+        <Text>{todayFood.length}</Text>
       </View>
     </View>
   );

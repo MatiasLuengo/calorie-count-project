@@ -10,6 +10,7 @@ import MealList from "../../components/MealList";
 export default function AddFood() {
   const [modalOpen, setModalOpen] = useState(false);
   const [food, setFood] = useState<Meal[]>([]);
+  const [search, setSearch] = useState("");
   const { onGetFood } = useFoodStorage();
 
   const loadFoods = async () => {
@@ -33,6 +34,20 @@ export default function AddFood() {
     loadFoods();
   }, []);
 
+  const handleSearchPress = async () => {
+    try {
+      const result = await onGetFood();
+      setFood(
+        result.filter((food: Meal) =>
+          food.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+        )
+      );
+    } catch (error) {
+      console.error(error);
+      setFood([]);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.webContainer}>
@@ -50,13 +65,21 @@ export default function AddFood() {
         </View>
         <View style={styles.searchContainer}>
           <View style={styles.inputContainer}>
-            <Input placeholder="manzana, carne, gaseosa..." />
+            <Input
+              placeholder="manzana, carne, gaseosa..."
+              value={search}
+              onChangeText={(text: string) => setSearch(text)}
+            />
           </View>
-          <Button icon={<Icon name="search" color={"#fff"} />} radius={"md"} />
+          <Button
+            icon={<Icon name="search" color={"#fff"} />}
+            radius={"md"}
+            onPress={handleSearchPress}
+          />
         </View>
+        <MealList mealItems={food} />
       </View>
       <AddFoodModal visible={modalOpen} onClose={handleModalClose} />
-      <MealList mealItems={food} />
     </View>
   );
 }
@@ -71,6 +94,7 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth: 800,
     marginHorizontal: "auto",
+    flex: 1,
   },
   addFoodContainer: {
     flexDirection: "row",
@@ -82,7 +106,7 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 22,
+    marginBottom: 10,
     marginEnd: 16,
   },
   inputContainer: {

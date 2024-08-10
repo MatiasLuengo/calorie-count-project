@@ -19,4 +19,5 @@ export type Meal = {
   name: string;
   calories: string;
   portion: string;
+  date?: string;
 };
