@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import Header from "../../components/Header";
 import { Button, Icon } from "@rneui/themed";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
@@ -6,6 +6,7 @@ import { Meal, NavigationProps, TodayCaloriesProps } from "../../types/index";
 import useFoodStorage from "../../hooks/useFoodStorage";
 import { useCallback, useState } from "react";
 import TodayCalories from "../../components/TodayCalories";
+import CardMeal from "../../components/CardMeal";
 
 export default function Home() {
   const { onGetTodayFood } = useFoodStorage();
@@ -58,6 +59,17 @@ export default function Home() {
     navigate("AddFood");
   };
 
+  const { onDeleteTodatFood } = useFoodStorage();
+  const handleEliminateItemPress = async (itemIndex: number) => {
+    try {
+      await onDeleteTodatFood(itemIndex);
+      alert("El alimento se eliminó del día");
+      loadTodayFood();
+    } catch (error) {
+      alert("El alimento no se pudo eliminar");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.webContainer}>
@@ -72,7 +84,21 @@ export default function Home() {
           />
         </View>
         <TodayCalories {...todayStatics} />
-        <Text>{todayFood.length}</Text>
+        <Text style={{ fontSize: 20, fontWeight: "bold", marginVertical: 22 }}>
+          Comidas
+        </Text>
+        <ScrollView>
+          {todayFood
+            ?.reverse()
+            .map((item, index) => (
+              <CardMeal
+                key={index}
+                item={item}
+                iconName="close"
+                onPress={() => handleEliminateItemPress(index)}
+              />
+            )) || <Text>No hay comidas cargadas el día de hoy</Text>}
+        </ScrollView>
       </View>
     </View>
   );
@@ -88,6 +114,7 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth: 800,
     marginHorizontal: "auto",
+    flex: 1,
   },
   caloriesContainer: {
     flexDirection: "row",

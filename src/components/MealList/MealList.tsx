@@ -2,22 +2,11 @@ import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { Meal } from "../../types";
 import { Button, Icon } from "@rneui/themed";
 import useFoodStorage from "../../hooks/useFoodStorage";
+import CardMeal from "../CardMeal";
 
 export default function MealList({ mealItems }: { mealItems: Meal[] }) {
-  return (
-    <ScrollView style={styles.container}>
-      {mealItems
-        ?.reverse()
-        .map((item, index) => <MealItem key={index} item={item} />) || (
-        <Text>No se encontraron resultados</Text>
-      )}
-    </ScrollView>
-  );
-}
-
-export function MealItem({ item }: { item: Meal }) {
   const { onSaveTodayFood } = useFoodStorage();
-  const handleAddItemPress = async () => {
+  const handleAddItemPress = async ({ item }: { item: Meal }) => {
     try {
       await onSaveTodayFood(item);
       alert("El alimento se agregó al día");
@@ -27,20 +16,18 @@ export function MealItem({ item }: { item: Meal }) {
   };
 
   return (
-    <View style={styles.mealCard}>
-      <View style={styles.separateContainer}>
-        <Text style={styles.name}>{item.name}</Text>
-        <Text style={styles.portion}>{item.portion}</Text>
-      </View>
-      <View>
-        <Button
-          icon={<Icon name="add-circle-outline" color={"#000"} />}
-          type="clear"
-          onPress={handleAddItemPress}
-        />
-        <Text style={styles.calorie}>{item.calories} cal</Text>
-      </View>
-    </View>
+    <ScrollView style={styles.container}>
+      {mealItems
+        ?.reverse()
+        .map((item, index) => (
+          <CardMeal
+            key={index}
+            item={item}
+            iconName="add-circle-outline"
+            onPress={() => handleAddItemPress({ item })}
+          />
+        )) || <Text>No se encontraron resultados</Text>}
+    </ScrollView>
   );
 }
 

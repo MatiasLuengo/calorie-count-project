@@ -23,8 +23,8 @@ export type Meal = {
 };
 
 export type TodayCaloriesProps = {
-  total?: number | string;
-  consumed?: number | string;
-  remaining?: number | string;
+  total: number | string;
+  consumed: number | string;
+  remaining: number;
   percentage: number;
 };
