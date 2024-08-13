@@ -17,16 +17,21 @@ export default function MealList({ mealItems }: { mealItems: Meal[] }) {
 
   return (
     <ScrollView style={styles.container}>
-      {mealItems
-        ?.reverse()
-        .map((item, index) => (
-          <CardMeal
-            key={index}
-            item={item}
-            iconName="add-circle-outline"
-            onPress={() => handleAddItemPress({ item })}
-          />
-        )) || <Text>No se encontraron resultados</Text>}
+      {(mealItems.length > 0 &&
+        mealItems
+          .reverse()
+          .map((item, index) => (
+            <CardMeal
+              key={index}
+              item={item}
+              iconName="add-circle-outline"
+              onPress={() => handleAddItemPress({ item })}
+            />
+          ))) || (
+        <Text style={{ textAlign: "center", fontSize: 20, marginTop: 50 }}>
+          No se encontraron resultados
+        </Text>
+      )}
     </ScrollView>
   );
 }

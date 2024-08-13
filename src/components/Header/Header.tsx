@@ -1,10 +1,10 @@
 import { useNavigation } from "@react-navigation/native";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { Button, Icon } from "@rneui/themed";
-const img = require("../../../assets/perfil.jpg");
+const img = require("../../../assets/user.png");
 
 const staticInfo = {
-  name: "Matías Luengo",
+  name: "",
   uri: img,
 };
 export default function Header() {
@@ -20,7 +20,7 @@ export default function Header() {
         ></Button>
       )}
       <View>
-        <Text style={styles.name}>Hola {staticInfo.name}</Text>
+        <Text style={styles.name}>Hola! {staticInfo.name}</Text>
         <Text style={styles.subtitle}>De regreso a tu objetivo</Text>
       </View>
       <Image source={staticInfo.uri} style={styles.profileImage} />

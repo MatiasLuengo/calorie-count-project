@@ -88,16 +88,21 @@ export default function Home() {
           Comidas
         </Text>
         <ScrollView>
-          {todayFood
-            ?.reverse()
-            .map((item, index) => (
-              <CardMeal
-                key={index}
-                item={item}
-                iconName="close"
-                onPress={() => handleEliminateItemPress(index)}
-              />
-            )) || <Text>No hay comidas cargadas el día de hoy</Text>}
+          {(todayFood.length > 0 &&
+            todayFood
+              ?.reverse()
+              .map((item, index) => (
+                <CardMeal
+                  key={index}
+                  item={item}
+                  iconName="close"
+                  onPress={() => handleEliminateItemPress(index)}
+                />
+              ))) || (
+            <Text style={{ textAlign: "center", fontSize: 20, marginTop: 50 }}>
+              No hay comidas cargadas el día de hoy
+            </Text>
+          )}
         </ScrollView>
       </View>
     </View>
