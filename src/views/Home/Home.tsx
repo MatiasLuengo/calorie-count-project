@@ -2,17 +2,44 @@ import { View, Text, StyleSheet } from "react-native";
 import Header from "../../components/Header";
 import { Button, Icon } from "@rneui/themed";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { Meal, NavigationProps } from "../../types/index";
+import { Meal, NavigationProps, TodayCaloriesProps } from "../../types/index";
 import useFoodStorage from "../../hooks/useFoodStorage";
 import { useCallback, useState } from "react";
+import TodayCalories from "../../components/TodayCalories";
 
 export default function Home() {
   const { onGetTodayFood } = useFoodStorage();
   const [todayFood, setTodayFood] = useState<Meal[]>([]);
+  const [todayStatics, setTodayStatics] = useState<TodayCaloriesProps>({
+    total: 2000,
+    consumed: 0,
+    remaining: 0,
+    percentage: 0,
+  });
+
+  const calculateTodayStatics = (meals: Meal[]) => {
+    try {
+      const caloriesConsumed = meals.reduce(
+        (accum, curr) => accum + Number(curr.calories),
+        0
+      );
+      const remainingCalories = 2000 - caloriesConsumed;
+      const percentage = (caloriesConsumed / 2000) * 100;
+      setTodayStatics({
+        total: 2000,
+        consumed: caloriesConsumed,
+        remaining: remainingCalories,
+        percentage: percentage,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const loadTodayFood = useCallback(async () => {
     try {
       const todayFoodResponse = await onGetTodayFood();
+      calculateTodayStatics(todayFoodResponse);
       setTodayFood(todayFoodResponse);
     } catch (error) {
       console.error(error);
@@ -44,6 +71,7 @@ export default function Home() {
             onPress={handleAddCaloriesPress}
           />
         </View>
+        <TodayCalories {...todayStatics} />
         <Text>{todayFood.length}</Text>
       </View>
     </View>
