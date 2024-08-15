@@ -75,7 +75,7 @@ export default function Home() {
       <View style={styles.webContainer}>
         <Header />
         <View style={styles.caloriesContainer}>
-          <Text style={{ fontSize: 20, fontWeight: "bold" }}>Calorías</Text>
+          <Text style={{ fontSize: 24, fontWeight: "bold" }}>Calorías</Text>
           <Button
             icon={<Icon name="add-circle-outline" color={"#fff"} />}
             radius={"md"}
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginVertical: 22,
+    marginVertical: 26,
     marginEnd: 16,
   },
 });

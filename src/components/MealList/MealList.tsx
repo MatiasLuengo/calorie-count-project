@@ -1,6 +1,5 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { Text, StyleSheet, ScrollView } from "react-native";
 import { Meal } from "../../types";
-import { Button, Icon } from "@rneui/themed";
 import useFoodStorage from "../../hooks/useFoodStorage";
 import CardMeal from "../CardMeal";
 

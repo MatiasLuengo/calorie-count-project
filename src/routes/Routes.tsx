@@ -12,12 +12,12 @@ export default function Routes() {
         <Stack.Screen
           name="Home"
           component={Home}
-          options={{ headerShown: false }}
+          options={{ headerShown: false, title: "Contador de calorías" }}
         />
         <Stack.Screen
           name="AddFood"
           component={AddFood}
-          options={{ headerShown: false }}
+          options={{ headerShown: false, title: "Contador de calorías" }}
         />
       </Stack.Navigator>
     </NavigationContainer>
