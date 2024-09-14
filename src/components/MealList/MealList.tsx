@@ -2,31 +2,58 @@ import { Text, StyleSheet, ScrollView } from "react-native";
 import { Meal } from "../../types";
 import useFoodStorage from "../../hooks/useFoodStorage";
 import CardMeal from "../CardMeal";
+import { useAppDispatch } from "../../hooks/store";
+import { addNewTodayMeal } from "../../todayMeals/slice/slice";
+import { deleteMeal } from "../../calories/slice/slice";
+import Toast from "react-native-toast-message";
 
 export default function MealList({ mealItems }: { mealItems: Meal[] }) {
-  const { onSaveTodayFood } = useFoodStorage();
-  const handleAddItemPress = async ({ item }: { item: Meal }) => {
+  const dispatch = useAppDispatch();
+
+  const handleAddItemPress = ({ item }: { item: Meal }) => {
     try {
-      await onSaveTodayFood(item);
-      alert("El alimento se agregó al día");
+      dispatch(addNewTodayMeal({ ...item, date: new Date().toISOString() }));
+      Toast.show({
+        type: "success",
+        text1: "El alimento se agregó al día",
+      });
     } catch (error) {
-      alert("El alimento no se pudo agregar al día");
+      Toast.show({
+        type: "error",
+        text1: "El alimento no se pudo agregar al día",
+      });
+    }
+  };
+
+  const handleDeleteItemPress = (itemIndex: number) => {
+    try {
+      console.log("Item index: ", itemIndex);
+      dispatch(deleteMeal(itemIndex));
+      Toast.show({
+        type: "success",
+        text1: "Alimento eliminado",
+      });
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "El alimento no se pudo eliminar",
+      });
     }
   };
 
   return (
     <ScrollView style={styles.container}>
       {(mealItems.length > 0 &&
-        mealItems
-          .reverse()
-          .map((item, index) => (
-            <CardMeal
-              key={index}
-              item={item}
-              iconName="add-circle-outline"
-              onPress={() => handleAddItemPress({ item })}
-            />
-          ))) || (
+        mealItems.map((item, index) => (
+          <CardMeal
+            key={index}
+            item={item}
+            iconName="add-circle-outline"
+            onPress={() => handleAddItemPress({ item })}
+            iconDeletename="close"
+            onPressDelete={() => handleDeleteItemPress(index)}
+          />
+        ))) || (
         <Text style={{ textAlign: "center", fontSize: 20, marginTop: 50 }}>
           No se encontraron resultados
         </Text>

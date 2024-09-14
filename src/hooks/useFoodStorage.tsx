@@ -1,24 +1,21 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+/* import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Meal } from "../types";
 import { isToday } from "date-fns";
 
 const MY_KEY = "@MYFOOD:Key";
 const MY_TODAY_FOOD_KEY = "@MYTODAYFOOD:Key";
 export default function useFoodStorage() {
-  const saveInfoToStorage = async (storageKey: string, meal: Meal) => {
+  const saveInfoToStorage = (storageKey: string, meal: Meal) => {
     try {
-      const currentSaveFood = await AsyncStorage.getItem(storageKey);
+      const currentSaveFood = localStorage.getItem(storageKey);
       if (currentSaveFood) {
         const currentSaveFoodParse = JSON.parse(currentSaveFood);
         currentSaveFoodParse.push(meal);
 
-        await AsyncStorage.setItem(
-          storageKey,
-          JSON.stringify(currentSaveFoodParse)
-        );
+        localStorage.setItem(storageKey, JSON.stringify(currentSaveFoodParse));
         return Promise.resolve();
       } else {
-        await AsyncStorage.setItem(storageKey, JSON.stringify([meal]));
+        localStorage.setItem(storageKey, JSON.stringify([meal]));
         return Promise.resolve();
       }
     } catch (error) {
@@ -36,58 +33,66 @@ export default function useFoodStorage() {
     }
   };
 
-  const handleGetFood = async () => {
+  const handleGetFood = () => {
     try {
-      const food = await AsyncStorage.getItem(MY_KEY);
-      return food ? Promise.resolve(JSON.parse(food)) : [];
+      const food = localStorage.getItem(MY_KEY);
+      return food ? JSON.parse(food) : [];
     } catch (error) {
       console.error(error);
       return Promise.reject(error);
     }
   };
 
-  const handleSaveTodayFood = async ({ name, calories, portion }: Meal) => {
+  const handleSaveTodayFood = ({ name, calories, portion, date }: Meal) => {
     try {
       const result = saveInfoToStorage(MY_TODAY_FOOD_KEY, {
         name,
         calories,
         portion,
-        date: new Date().toISOString(),
+        date,
       });
-      return Promise.resolve(result);
+      return result;
     } catch (error) {
-      return Promise.reject(error);
+      return error;
     }
   };
 
-  const handleGetTodatFood = async () => {
+  const handleGetTodatFood = () => {
     try {
-      const food = await AsyncStorage.getItem(MY_TODAY_FOOD_KEY);
+      const food = localStorage.getItem(MY_TODAY_FOOD_KEY);
       return food
-        ? Promise.resolve(
-            JSON.parse(food).filter(
-              (meal: Meal) => meal.date && isToday(meal.date)
-            )
+        ? JSON.parse(food).filter(
+            (meal: Meal) => meal.date && isToday(meal.date)
           )
         : [];
     } catch (error) {
       console.error(error);
-      return Promise.reject(error);
+      return error;
     }
   };
 
-  const handleRemoveTodayFood = async (index: number) => {
+  const handleRemoveTodayFood = (index: number) => {
     try {
-      const todayFood = await handleGetTodatFood();
+      const todayFood = handleGetTodatFood();
       const filteredItem = todayFood?.filter(
         (item: Meal, itemIndex: number) => {
           return itemIndex !== index;
         }
       );
-      await AsyncStorage.setItem(
-        MY_TODAY_FOOD_KEY,
-        JSON.stringify(filteredItem)
-      );
+      localStorage.setItem(MY_TODAY_FOOD_KEY, JSON.stringify(filteredItem));
+      return Promise.resolve();
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  };
+
+  const handleDeleteFood = (index: number) => {
+    try {
+      const food = handleGetFood();
+      const filteredItem = food?.filter((item: Meal, itemIndex: number) => {
+        return itemIndex !== index;
+      });
+      localStorage.setItem(MY_KEY, JSON.stringify(filteredItem));
       return Promise.resolve();
     } catch (error) {
       return Promise.reject(error);
@@ -97,8 +102,10 @@ export default function useFoodStorage() {
   return {
     onSaveFood: handleSaveFood,
     onGetFood: handleGetFood,
+    onDeleteFood: handleDeleteFood,
     onSaveTodayFood: handleSaveTodayFood,
     onGetTodayFood: handleGetTodatFood,
-    onDeleteTodatFood: handleRemoveTodayFood,
+    onDeleteTodayFood: handleRemoveTodayFood,
   };
 }
+ */

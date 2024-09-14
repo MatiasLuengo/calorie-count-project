@@ -6,10 +6,14 @@ export default function CardMeal({
   item,
   onPress,
   iconName,
+  iconDeletename,
+  onPressDelete,
 }: {
   item: Meal;
   onPress: () => void;
   iconName: string;
+  iconDeletename?: string;
+  onPressDelete?: () => void;
 }) {
   return (
     <View style={styles.mealCard}>
@@ -17,12 +21,21 @@ export default function CardMeal({
         <Text style={styles.name}>{item.name}</Text>
         <Text style={styles.portion}>{item.portion}</Text>
       </View>
-      <View>
-        <Button
-          icon={<Icon name={iconName} color={"#000"} />}
-          type="clear"
-          onPress={onPress}
-        />
+      <View style={{ flexDirection: "column", alignItems: "center" }}>
+        <View style={{ flexDirection: "row" }}>
+          <Button
+            icon={<Icon name={iconName} color={"#000"} />}
+            type="clear"
+            onPress={onPress}
+          />
+          {iconDeletename && (
+            <Button
+              icon={<Icon name={iconDeletename} color={"#000"} />}
+              type="clear"
+              onPress={onPressDelete}
+            />
+          )}
+        </View>
         <Text style={styles.calorie}>{item.calories} cal</Text>
       </View>
     </View>

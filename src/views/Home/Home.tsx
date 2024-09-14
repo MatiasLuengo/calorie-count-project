@@ -1,16 +1,19 @@
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import Header from "../../components/Header";
 import { Button, Icon } from "@rneui/themed";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { Meal, NavigationProps, TodayCaloriesProps } from "../../types/index";
-import useFoodStorage from "../../hooks/useFoodStorage";
-import { useCallback, useState } from "react";
+import { useEffect, useState } from "react";
 import TodayCalories from "../../components/TodayCalories";
 import CardMeal from "../../components/CardMeal";
+import { useAppDispatch, useAppSelector } from "../../hooks/store";
+import { deleteTodayMeal } from "../../todayMeals/slice/slice";
+import Toast from "react-native-toast-message";
 
 export default function Home() {
-  const { onGetTodayFood } = useFoodStorage();
-  const [todayFood, setTodayFood] = useState<Meal[]>([]);
+  let todayFood = useAppSelector((state) => state.todayMeals);
+  console.log("Today: ", todayFood);
+  const dispatch = useAppDispatch();
   const [todayStatics, setTodayStatics] = useState<TodayCaloriesProps>({
     total: 2000,
     consumed: 0,
@@ -37,36 +40,27 @@ export default function Home() {
     }
   };
 
-  const loadTodayFood = useCallback(async () => {
-    try {
-      const todayFoodResponse = await onGetTodayFood();
-      calculateTodayStatics(todayFoodResponse);
-      setTodayFood(todayFoodResponse);
-    } catch (error) {
-      console.error(error);
-      setTodayFood([]);
-    }
-  }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      loadTodayFood().catch(null);
-    }, [loadTodayFood])
-  );
+  useEffect(() => {
+    calculateTodayStatics(todayFood);
+  }, [todayFood]);
 
   const { navigate } = useNavigation<NavigationProps>();
   const handleAddCaloriesPress = () => {
     navigate("AddFood");
   };
 
-  const { onDeleteTodatFood } = useFoodStorage();
-  const handleEliminateItemPress = async (itemIndex: number) => {
+  const handleEliminateItemPress = (itemIndex: number) => {
     try {
-      await onDeleteTodatFood(itemIndex);
-      alert("El alimento se eliminó del día");
-      loadTodayFood();
+      dispatch(deleteTodayMeal(itemIndex));
+      Toast.show({
+        type: "success",
+        text1: "El alimento se eliminó del día",
+      });
     } catch (error) {
-      alert("El alimento no se pudo eliminar");
+      Toast.show({
+        type: "error",
+        text1: "El alimento no se pudo eliminar",
+      });
     }
   };
 
@@ -89,16 +83,14 @@ export default function Home() {
         </Text>
         <ScrollView>
           {(todayFood.length > 0 &&
-            todayFood
-              ?.reverse()
-              .map((item, index) => (
-                <CardMeal
-                  key={index}
-                  item={item}
-                  iconName="close"
-                  onPress={() => handleEliminateItemPress(index)}
-                />
-              ))) || (
+            todayFood.map((item: Meal, index: number) => (
+              <CardMeal
+                key={index}
+                item={item}
+                iconName="close"
+                onPress={() => handleEliminateItemPress(index)}
+              />
+            ))) || (
             <Text style={{ textAlign: "center", fontSize: 20, marginTop: 50 }}>
               No hay comidas cargadas el día de hoy
             </Text>

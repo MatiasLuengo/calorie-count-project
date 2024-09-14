@@ -2,12 +2,15 @@ import { View, Modal, StyleSheet, Text } from "react-native";
 import { AddFoodModalProps } from "../../types/index";
 import { Button, Icon, Input } from "@rneui/themed";
 import { useEffect, useState } from "react";
-import useFoodStorage from "../../hooks/useFoodStorage";
+/* import useFoodStorage from "../../hooks/useFoodStorage"; */
+import { addNewMeal } from "../../calories/slice/slice";
+import { useAppDispatch } from "../../hooks/store";
+import Toast from "react-native-toast-message";
 export default function AddFoodModal({ onClose, visible }: AddFoodModalProps) {
   const [name, setName] = useState("");
   const [calories, setCalories] = useState("");
   const [portion, setPortion] = useState("");
-  const { onSaveFood } = useFoodStorage();
+  /* const { onSaveFood } = useFoodStorage(); */
 
   useEffect(() => {
     setName("");
@@ -15,10 +18,33 @@ export default function AddFoodModal({ onClose, visible }: AddFoodModalProps) {
     setPortion("");
   }, [visible]);
 
-  const handleSubmit = async () => {
+  /*   const handleSubmit = async () => {
     try {
       await onSaveFood({ name, calories, portion });
       onClose(true);
+    } catch (error) {
+      console.error(error);
+    }
+  }; */
+
+  const dispatch = useAppDispatch();
+  const handleSubmit = async () => {
+    const calorieValue = parseInt(calories, 10);
+    if (isNaN(calorieValue) || calorieValue < 0) {
+      Toast.show({
+        type: "error",
+        text1: "Las calorías deben ser un",
+        text2: "número mayor que cero.",
+      });
+      return;
+    }
+    try {
+      dispatch(addNewMeal({ name, calories, portion }));
+      Toast.show({
+        type: "success",
+        text1: "El alimento se agrego correctamente",
+      });
+      onClose();
     } catch (error) {
       console.error(error);
     }

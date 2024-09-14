@@ -3,50 +3,34 @@ import Header from "../../components/Header";
 import { Button, Icon, Input } from "@rneui/themed";
 import AddFoodModal from "../../components/AddFoodModal";
 import { useEffect, useState } from "react";
-import useFoodStorage from "../../hooks/useFoodStorage";
 import { Meal } from "../../types";
 import MealList from "../../components/MealList";
+import { useAppSelector } from "../../hooks/store";
 
 export default function AddFood() {
+  let food = useAppSelector((state) => state.meals);
+  console.log(food);
   const [modalOpen, setModalOpen] = useState(false);
-  const [food, setFood] = useState<Meal[]>([]);
   const [search, setSearch] = useState("");
-  const { onGetFood } = useFoodStorage();
-
-  const loadFoods = async () => {
-    try {
-      const foodResponse = await onGetFood();
-      setFood(foodResponse);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleModalClose = async (shouldRefresh?: boolean) => {
-    if (shouldRefresh) {
-      alert("El alimento se agrego correctamente");
-      loadFoods();
-    }
-    setModalOpen(false);
-  };
-
-  useEffect(() => {
-    loadFoods();
-  }, []);
+  const [foodSearched, setFoodSearched] = useState<Meal[]>(food);
 
   const handleSearchPress = async () => {
     try {
-      const result = await onGetFood();
-      setFood(
+      const result = food;
+      setFoodSearched(
         result.filter((food: Meal) =>
           food.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
         )
       );
     } catch (error) {
       console.error(error);
-      setFood([]);
+      setFoodSearched([]);
     }
   };
+
+  useEffect(() => {
+    setFoodSearched(food);
+  }, [food]);
 
   return (
     <View style={styles.container}>
@@ -77,9 +61,9 @@ export default function AddFood() {
             onPress={handleSearchPress}
           />
         </View>
-        <MealList mealItems={food} />
+        <MealList mealItems={foodSearched} />
       </View>
-      <AddFoodModal visible={modalOpen} onClose={handleModalClose} />
+      <AddFoodModal visible={modalOpen} onClose={() => setModalOpen(false)} />
     </View>
   );
 }
